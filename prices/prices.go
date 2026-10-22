@@ -1,12 +1,11 @@
 package prices
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/guetzan/price-calculator/converter"
+	filemanager "github.com/guetzan/price-calculator/file-manager"
 )
 
 type TaxIncludedPriceJob struct {
@@ -27,32 +26,12 @@ func (job *TaxIncludedPriceJob) Process() {
 }
 
 func (job *TaxIncludedPriceJob) LoadData() {
-	file, err := os.Open("prices.txt")
+	content, err := filemanager.ReadFile("prices.txt")
 
 	if err != nil {
-		fmt.Println("Failed to open file.")
-		fmt.Println(err)
-		return
-	}
-
-	scanner := bufio.NewScanner(file)
-
-	var content []string
-
-	for scanner.Scan() {
-		content = append(content, scanner.Text())
-	}
-
-	err = scanner.Err()
-
-	if err != nil {
-		fmt.Println("Error at reading the file.")
 		fmt.Println(err.Error())
-		file.Close()
 		return
 	}
-
-	file.Close()
 
 	prices, err := converter.StringsToFloat(content)
 

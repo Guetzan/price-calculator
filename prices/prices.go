@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
+
+	"github.com/guetzan/price-calculator/converter"
 )
 
 type TaxIncludedPriceJob struct {
@@ -51,22 +52,15 @@ func (job *TaxIncludedPriceJob) LoadData() {
 		return
 	}
 
-	prices := make([]float64, len(content))
+	file.Close()
 
-	for index, price := range content {
-		price = strings.TrimSpace(price)
-		convertedPrice, err := strconv.ParseFloat(price, 64)
+	prices, err := converter.StringsToFloat(content)
 
-		if err != nil {
-			fmt.Println(err.Error())
-			file.Close()
-			return
-		}
-
-		prices[index] = convertedPrice
+	if err != nil {
+		fmt.Println(err.Error())
+		return
 	}
 
-	file.Close()
 	job.Prices = prices
 }
 

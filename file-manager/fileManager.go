@@ -37,7 +37,7 @@ func WriteJson(name string, data any) error {
 	file, err := os.Create(name)
 
 	if err != nil {
-		return errors.New("failed to create json file")
+		return errors.New("failed to create file")
 	}
 
 	encoder := json.NewEncoder(file)

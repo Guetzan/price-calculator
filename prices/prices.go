@@ -2,7 +2,6 @@ package prices
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/guetzan/price-calculator/converter"
 	filemanager "github.com/guetzan/price-calculator/file-manager"
@@ -11,18 +10,21 @@ import (
 type TaxIncludedPriceJob struct {
 	TaxRate           float64
 	Prices            []float64
-	TaxIncludedPrices map[string]float64
+	TaxIncludedPrices map[string]string
 }
 
 func (job *TaxIncludedPriceJob) Process() {
 	job.LoadData()
 
+	result := make(map[string]string)
+
 	for _, price := range job.Prices {
 		taxIncludedPrice := price * (1 + job.TaxRate)
-		job.TaxIncludedPrices[fmt.Sprintf("%.2f", price)], _ = strconv.ParseFloat(fmt.Sprintf("%.2f", taxIncludedPrice), 64) //coisa horrorosa (temporária)
+		result[fmt.Sprintf("%.2f", price)] = fmt.Sprintf("%.2f", taxIncludedPrice)
 	}
 
-	fmt.Println(job.TaxIncludedPrices)
+	job.TaxIncludedPrices = result
+	filemanager.WriteJson(fmt.Sprintf("result%.0f.json", job.TaxRate*100), job)
 }
 
 func (job *TaxIncludedPriceJob) LoadData() {
@@ -47,6 +49,6 @@ func NewTaxIncludedPriceJob(taxRate float64) *TaxIncludedPriceJob {
 	return &TaxIncludedPriceJob{
 		TaxRate:           taxRate,
 		Prices:            []float64{54.99, 99.90, 8.50},
-		TaxIncludedPrices: make(map[string]float64),
+		TaxIncludedPrices: make(map[string]string),
 	}
 }

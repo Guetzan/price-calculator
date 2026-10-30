@@ -1,4 +1,8 @@
 {
+	"IOManager": {
+		"InputPath": "prices.txt",
+		"OutputPath": "result10.json"
+	},
 	"TaxRate": 0.1,
 	"Prices": [
 		56.99,

@@ -66,3 +66,5 @@ func New(inputPath, OutputPath string) FileManager {
 		OutputPath: OutputPath,
 	}
 }
+
+//teste

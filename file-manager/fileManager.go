@@ -12,11 +12,11 @@ type FileManager struct {
 	OutputPath string
 }
 
-func (fm FileManager) ReadFile() ([]string, error) {
+func (fm FileManager) ReadLines() ([]string, error) {
 	file, err := os.Open(fm.InputPath)
 
 	if err != nil {
-		return []string{}, errors.New("Error at opening file")
+		return []string{}, errors.New("Failed to open file")
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -30,7 +30,7 @@ func (fm FileManager) ReadFile() ([]string, error) {
 	err = scanner.Err()
 
 	if err != nil {
-		return []string{}, errors.New("Error at reading file's lines")
+		return []string{}, errors.New("Failed to read lines")
 	}
 
 	file.Close()
@@ -38,11 +38,11 @@ func (fm FileManager) ReadFile() ([]string, error) {
 	return lines, nil
 }
 
-func (fm FileManager) WriteJson(data any) error {
+func (fm FileManager) WriteResult(data any) error {
 	file, err := os.Create(fm.OutputPath)
 
 	if err != nil {
-		return errors.New("failed to create file")
+		return errors.New("Failed to create file")
 	}
 
 	encoder := json.NewEncoder(file)
@@ -53,7 +53,7 @@ func (fm FileManager) WriteJson(data any) error {
 
 	if err != nil {
 		file.Close()
-		return errors.New("failed to encode data to json")
+		return errors.New("Failed to encode data to json")
 	}
 
 	file.Close()

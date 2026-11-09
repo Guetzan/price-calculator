@@ -18,11 +18,12 @@ type IOManager interface {
 	WriteResult(data any) error
 }
 
-func (job *TaxIncludedPriceJob) Process() error {
+func (job *TaxIncludedPriceJob) Process(doneChan chan bool, errChan chan error) {
 	err := job.LoadData()
 
 	if err != nil {
-		return err
+		errChan <- err
+		return
 	}
 
 	result := make(map[string]string)
@@ -35,7 +36,7 @@ func (job *TaxIncludedPriceJob) Process() error {
 	job.TaxIncludedPrices = result
 	err = job.IOManager.WriteResult(job)
 
-	return err
+	doneChan <- true
 }
 
 func (job *TaxIncludedPriceJob) LoadData() error {
